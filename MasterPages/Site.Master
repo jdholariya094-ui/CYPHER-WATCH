@@ -1,0 +1,279 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="CYPHER.MasterPages.SiteMaster" %>
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CYPHER — Premium luxury watch collection. Shop Rolex, Omega, Tissot, Seiko and more." />
+  <title>CYPHER Watches — <asp:ContentPlaceHolder ID="PageTitle" runat="server">Luxury Timepieces</asp:ContentPlaceHolder></title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- CYPHER CSS -->
+  <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/site.css") %>" />
+  <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/animations.css") %>" />
+  <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body>
+  <form id="masterForm" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar-cypher navbar navbar-expand-lg">
+      <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand-cypher" href="<%= ResolveUrl("~/Pages/Home.aspx") %>">
+          CY<span>PHER</span>
+        </a>
+
+        <!-- Mobile toggle -->
+        <button class="navbar-toggler border-0 text-light" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navMain">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMain">
+          <!-- Main nav links -->
+          <ul class="navbar-nav mx-auto gap-1">
+            <li class="nav-item">
+              <a class="nav-link-cypher <%= IsActivePage("Home") %>"
+                 href="<%= ResolveUrl("~/Pages/Home.aspx") %>">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-cypher <%= IsActivePage("Watches") %>"
+                 href="<%= ResolveUrl("~/Pages/Watches.aspx") %>">Watches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-cypher <%= IsActivePage("Collections") %>"
+                 href="<%= ResolveUrl("~/Pages/Collections.aspx") %>">Collections</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-cypher <%= IsActivePage("Brands") %>"
+                 href="<%= ResolveUrl("~/Pages/Brands.aspx") %>">Brands</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-cypher <%= IsActivePage("About") %>"
+                 href="<%= ResolveUrl("~/Pages/About.aspx") %>">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-cypher <%= IsActivePage("Contact") %>"
+                 href="<%= ResolveUrl("~/Pages/Contact.aspx") %>">Contact</a>
+            </li>
+          </ul>
+
+          <!-- Right section -->
+          <div class="d-flex align-items-center gap-2">
+            <!-- Search -->
+            <div class="position-relative d-none d-lg-block">
+              <input type="text" id="navSearchInput" class="search-bar-cypher"
+                     placeholder="Search watches..." />
+              <div id="searchDropdown" class="position-absolute w-100 mt-1"
+                   style="display:none; background:#1A1A1A; border:1px solid rgba(201,168,76,0.2);
+                          border-radius:8px; z-index:200; max-height:280px; overflow-y:auto;">
+              </div>
+            </div>
+
+            <!-- Wishlist -->
+            <a href="<%= ResolveUrl("~/Pages/Dashboard.aspx?tab=wishlist") %>"
+               class="nav-icon-btn" title="Wishlist">
+              <i class="far fa-heart"></i>
+            </a>
+
+            <!-- Cart -->
+            <a href="<%= ResolveUrl("~/Pages/Cart.aspx") %>"
+               class="nav-icon-btn cart-icon-wrap" title="Cart">
+              <i class="fas fa-shopping-bag"></i>
+              <span class="cart-badge" id="cartBadge"><%= CartCount %></span>
+            </a>
+
+            <!-- Auth -->
+            <asp:Panel ID="pnlGuest" runat="server">
+              <a class="btn-login-pill" href="<%= ResolveUrl("~/Pages/Login.aspx") %>">
+                <i class="far fa-user me-1"></i> Login
+              </a>
+            </asp:Panel>
+
+            <asp:Panel ID="pnlUser" runat="server">
+              <div class="dropdown">
+                <button class="btn-login-pill dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown">
+                  <i class="far fa-user me-1"></i>
+                  <%= UserName %>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end"
+                    style="background:#1A1A1A; border:1px solid rgba(201,168,76,0.2);">
+                  <li>
+                    <a class="dropdown-item text-light"
+                       href="<%= ResolveUrl("~/Pages/Dashboard.aspx") %>">
+                      <i class="fas fa-tachometer-alt me-2 text-warning"></i>Dashboard
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item text-light"
+                       href="<%= ResolveUrl("~/Pages/Dashboard.aspx?tab=orders") %>">
+                      <i class="fas fa-box me-2 text-warning"></i>My Orders
+                    </a>
+                  </li>
+                  <li><hr class="dropdown-divider" style="border-color:rgba(255,255,255,0.1);" /></li>
+                  <li>
+                    <asp:LinkButton ID="lnkLogout" runat="server"
+                                    CssClass="dropdown-item text-danger"
+                                    OnClick="lnkLogout_Click">
+                      <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </asp:LinkButton>
+                  </li>
+                </ul>
+              </div>
+            </asp:Panel>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer-cypher">
+      <div class="container">
+        <div class="row g-5">
+          <!-- Brand -->
+          <div class="col-lg-4">
+            <div class="footer-brand">CYPHER</div>
+            <p class="footer-tagline mt-2">
+              Luxury timepieces crafted for the discerning collector.
+              Where precision meets elegance.
+            </p>
+            <div class="footer-social mt-3">
+              <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-pinterest-p"></i></a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-sm-6 col-lg-2">
+            <h6 class="footer-heading">Quick Links</h6>
+            <ul class="footer-links">
+              <li><a href="<%= ResolveUrl("~/Pages/Home.aspx") %>">Home</a></li>
+              <li><a href="<%= ResolveUrl("~/Pages/Watches.aspx") %>">Shop Watches</a></li>
+              <li><a href="<%= ResolveUrl("~/Pages/Collections.aspx") %>">Collections</a></li>
+              <li><a href="<%= ResolveUrl("~/Pages/Brands.aspx") %>">Brands</a></li>
+              <li><a href="<%= ResolveUrl("~/Pages/About.aspx") %>">About Us</a></li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div class="col-sm-6 col-lg-3">
+            <h6 class="footer-heading">Customer Support</h6>
+            <ul class="footer-links">
+              <li><a href="<%= ResolveUrl("~/Pages/Contact.aspx") %>">Contact Us</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms &amp; Conditions</a></li>
+              <li><a href="#">Return Policy</a></li>
+              <li><a href="#">Shipping Info</a></li>
+              <li>
+                <a href="<%= ResolveUrl("~/Pages/Dashboard.aspx?tab=orders") %>">
+                  Track Order
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Newsletter + Contact -->
+          <div class="col-lg-3">
+            <h6 class="footer-heading">Stay Updated</h6>
+            <p style="color:#666; font-size:.82rem; margin-bottom:1rem;">
+              Subscribe for exclusive offers and new arrivals.
+            </p>
+            <div class="newsletter-input-group mb-4">
+              <input type="email" id="footerEmail" class="newsletter-input"
+                     placeholder="Your email address" />
+              <button class="newsletter-btn" onclick="subscribeNewsletter(); return false;">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+            <div style="color:#666; font-size:.82rem; line-height:2;">
+              <div><i class="fas fa-phone me-2" style="color:#C9A84C;"></i>+91 98765 43210</div>
+              <div><i class="fas fa-envelope me-2" style="color:#C9A84C;"></i>support@cypherwatch.com</div>
+              <div><i class="fas fa-map-marker-alt me-2" style="color:#C9A84C;"></i>Mumbai, India</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+          <span class="footer-copy">
+            &copy; <%= DateTime.Now.Year %> CYPHER Watches. All rights reserved.
+          </span>
+          <div class="d-flex align-items-center gap-2">
+            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=VISA"    alt="Visa"       style="border-radius:3px;" />
+            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=MC"      alt="Mastercard" style="border-radius:3px;" />
+            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=UPI"     alt="UPI"        style="border-radius:3px;" />
+            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=PayTm"   alt="Paytm"      style="border-radius:3px;" />
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back To Top -->
+    <button id="backToTop" title="Back to top"><i class="fas fa-chevron-up"></i></button>
+
+    <!-- Quick View Modal -->
+    <div class="modal fade" id="quickViewModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="background:#141414; border:1px solid rgba(201,168,76,0.2);">
+          <div class="modal-header border-0 px-4 pt-4">
+            <h5 class="modal-title" style="color:#C9A84C; font-family:'Cormorant Garamond',serif;">
+              Quick View
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4" id="quickViewContent">
+            <div class="text-center py-5">
+              <div class="spinner-gold mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container (JS-driven) -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- CYPHER Scripts -->
+    <script src="<%= ResolveUrl("~/Scripts/site.js") %>"></script>
+    <script src="<%= ResolveUrl("~/Scripts/cart.js") %>"></script>
+    <script src="<%= ResolveUrl("~/Scripts/validation.js") %>"></script>
+
+    <script>
+      // Newsletter AJAX via form post
+      function subscribeNewsletter() {
+        var email = document.getElementById('footerEmail').value.trim();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showToast('Please enter a valid email address.', 'fa-exclamation-circle'); return;
+        }
+        document.getElementById('hdnNewsletterEmail').value = email;
+        document.getElementById('btnSubscribeServer').click();
+      }
+    </script>
+
+    <!-- Hidden newsletter controls -->
+    <asp:HiddenField ID="hdnNewsletterEmail" runat="server" />
+    <asp:Button ID="btnSubscribeServer" runat="server"
+                Style="display:none" OnClick="btnSubscribeServer_Click" />
+
+    <asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />
+  </form>
+</body>
+</html>

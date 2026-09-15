@@ -1,0 +1,149 @@
+/* ============================================================
+   CYPHER — animations.css
+   ============================================================ */
+
+/* ── Keyframes ── */
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity:0; transform:translateX(-30px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity:0; transform:translateX(30px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity:0; transform:scale(0.9); }
+  to   { opacity:1; transform:scale(1); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -1000px 0; }
+  100% { background-position:  1000px 0; }
+}
+
+@keyframes pulse-gold {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.3); }
+  50%      { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+@keyframes rotateGlow {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes textGlow {
+  0%,100% { text-shadow: 0 0 10px rgba(201,168,76,0.3); }
+  50%      { text-shadow: 0 0 30px rgba(201,168,76,0.8), 0 0 60px rgba(201,168,76,0.3); }
+}
+
+@keyframes lineExpand {
+  from { width: 0; }
+  to   { width: 60px; }
+}
+
+/* ── Animation Utility Classes ── */
+.anim-fade-up   { animation: fadeInUp   0.7s ease forwards; }
+.anim-fade-left { animation: fadeInLeft  0.7s ease forwards; }
+.anim-fade-right{ animation: fadeInRight 0.7s ease forwards; }
+.anim-scale-in  { animation: scaleIn    0.5s ease forwards; }
+.anim-float     { animation: float 4s ease-in-out infinite; }
+.anim-pulse     { animation: pulse-gold 2s infinite; }
+.anim-glow-text { animation: textGlow 3s ease-in-out infinite; }
+
+/* Staggered delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+
+/* ── Skeleton Loader ── */
+.skeleton {
+  background: linear-gradient(90deg, #1A1A1A 25%, #252525 37%, #1A1A1A 63%);
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* ── Scroll-Reveal (JS toggles .revealed) ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.revealed { opacity:1; transform:translateY(0); }
+
+/* ── Hero Entrance ── */
+.hero-eyebrow  { opacity:0; animation: fadeInUp 0.6s 0.2s ease forwards; }
+.hero-title    { opacity:0; animation: fadeInUp 0.7s 0.4s ease forwards; }
+.hero-divider  { opacity:0; animation: lineExpand 0.6s 0.6s ease forwards, fadeInUp 0.6s 0.6s ease forwards; }
+.hero-subtitle { opacity:0; animation: fadeInUp 0.7s 0.8s ease forwards; }
+.hero-buttons  { opacity:0; animation: fadeInUp 0.7s 1.0s ease forwards; }
+
+/* ── Hover Lift ── */
+.hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.hover-lift:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
+
+/* ── Gold Shimmer Button ── */
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: skewX(-20deg);
+  transition: 0.6s;
+}
+.btn-shimmer:hover::after { left: 125%; }
+
+/* ── Counter Animation ── */
+.counter-value { transition: all 0.3s ease; }
+
+/* ── Stats Counter Section ── */
+.stat-card {
+  text-align: center;
+  padding: 2rem;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  transition: all 0.3s ease;
+}
+.stat-card:hover { border-color: var(--gold,#C9A84C); transform: translateY(-4px); }
+.stat-number { font-size: 2.5rem; font-weight: 700; color: #C9A84C; font-family: 'Cormorant Garamond',serif; }
+.stat-label  { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-top: 0.3rem; }
+
+/* ── Image Zoom ── */
+.img-zoom-wrap { overflow: hidden; border-radius: 12px; }
+.img-zoom-wrap img { transition: transform 0.5s ease; }
+.img-zoom-wrap:hover img { transform: scale(1.1); }
+
+/* ── Ripple Effect ── */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transform: scale(0);
+  animation: ripple-anim 0.6s linear;
+  pointer-events: none;
+}
+@keyframes ripple-anim {
+  to { transform: scale(4); opacity: 0; }
+}

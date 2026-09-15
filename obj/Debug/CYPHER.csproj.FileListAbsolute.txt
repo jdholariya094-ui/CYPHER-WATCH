@@ -1,0 +1,7 @@
+D:\ASP_NET template\CYPHER\obj\Debug\CYPHER.csproj.AssemblyReference.cache
+D:\ASP_NET template\CYPHER\obj\Debug\CYPHER.csproj.CoreCompileInputs.cache
+D:\ASP_NET template\CYPHER\bin\CYPHER.dll
+D:\ASP_NET template\CYPHER\bin\CYPHER.pdb
+D:\ASP_NET template\CYPHER\obj\Debug\CYPHER.dll
+D:\ASP_NET template\CYPHER\obj\Debug\CYPHER.pdb
+D:\ASP_NET template\CYPHER\bin\CYPHER.dll.config

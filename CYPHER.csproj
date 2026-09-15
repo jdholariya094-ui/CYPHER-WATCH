@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CYPHER</RootNamespace>
+    <AssemblyName>CYPHER</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">17.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <UseCodePage>utf-8</UseCodePage>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <!-- ==================== MASTER PAGES ==================== -->
+  <ItemGroup>
+    <Content Include="MasterPages\Site.Master">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Compile Include="MasterPages\Site.Master.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\AdminMaster.master">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Compile Include="Admin\AdminMaster.master.cs">
+      <DependentUpon>AdminMaster.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+  </ItemGroup>
+  <!-- ==================== PAGES ==================== -->
+  <ItemGroup>
+    <Content Include="Pages\Home.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Home.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Watches.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Watches.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Watches.aspx.cs">
+      <DependentUpon>Watches.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\ProductDetail.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>ProductDetail.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\ProductDetail.aspx.cs">
+      <DependentUpon>ProductDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Collections.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Collections.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Collections.aspx.cs">
+      <DependentUpon>Collections.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Brands.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Brands.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Brands.aspx.cs">
+      <DependentUpon>Brands.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\About.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>About.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\About.aspx.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Contact.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Contact.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Contact.aspx.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Login.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Login.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Register.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Register.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Dashboard.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Dashboard.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Dashboard.aspx.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Cart.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Cart.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Cart.aspx.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\Checkout.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Checkout.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\Checkout.aspx.cs">
+      <DependentUpon>Checkout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Pages\OrderSuccess.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>OrderSuccess.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Pages\OrderSuccess.aspx.cs">
+      <DependentUpon>OrderSuccess.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+  </ItemGroup>
+  <!-- ==================== ADMIN PAGES ==================== -->
+  <ItemGroup>
+    <Content Include="Admin\AdminLogin.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>AdminLogin.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\AdminLogin.aspx.cs">
+      <DependentUpon>AdminLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Dashboard.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Dashboard.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Dashboard.aspx.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Products.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Products.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Products.aspx.cs">
+      <DependentUpon>Products.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Categories.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Categories.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Categories.aspx.cs">
+      <DependentUpon>Categories.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Brands.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Brands.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Brands.aspx.cs">
+      <DependentUpon>Brands.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Orders.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Orders.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Orders.aspx.cs">
+      <DependentUpon>Orders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Users.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Users.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Users.aspx.cs">
+      <DependentUpon>Users.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Reviews.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Reviews.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Reviews.aspx.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Coupons.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Coupons.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Coupons.aspx.cs">
+      <DependentUpon>Coupons.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Content Include="Admin\Reports.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Reports.aspx.cs</DependentUpon>
+    </Content>
+    <Compile Include="Admin\Reports.aspx.cs">
+      <DependentUpon>Reports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+  </ItemGroup>
+  <!-- ==================== CONTENT / STATIC ==================== -->
+  <ItemGroup>
+    <Content Include="Content\css\site.css" />
+    <Content Include="Content\css\animations.css" />
+    <Content Include="Content\css\watches.css" />
+    <Content Include="Content\css\admin.css" />
+    <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\cart.js" />
+    <Content Include="Scripts\validation.js" />
+    <Content Include="Database\CYPHER_DB.sql" />
+    <Content Include="Web.config" />
+    <Content Include="Global.asax" />
+  </ItemGroup>
+  <!-- ==================== APP_CODE ==================== -->
+  <ItemGroup>
+    <Compile Include="App_Code\DBHelper.cs" />
+    <Compile Include="App_Code\SessionHelper.cs" />
+    <Compile Include="App_Code\EmailHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' and Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>55005</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:55005/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
