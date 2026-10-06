@@ -69,6 +69,9 @@
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="MasterPages\Site.Master.designer.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
     <Content Include="Admin\AdminMaster.master">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -143,6 +146,9 @@
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Pages\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
     <Content Include="Pages\Register.aspx">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>Register.aspx.cs</DependentUpon>
@@ -151,6 +157,9 @@
       <DependentUpon>Register.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Pages\Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
     <Content Include="Pages\Dashboard.aspx">
       <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>Dashboard.aspx.cs</DependentUpon>
@@ -158,6 +167,9 @@
     <Compile Include="Pages\Dashboard.aspx.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Dashboard.aspx.designer.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
     </Compile>
     <Content Include="Pages\Cart.aspx">
       <SubType>ASPXCodeBehind</SubType>
@@ -273,6 +285,25 @@
     <Content Include="Content\css\animations.css" />
     <Content Include="Content\css\watches.css" />
     <Content Include="Content\css\admin.css" />
+    <Content Include="Content\images\hero-watch.jpg" />
+    <Content Include="Content\images\luxury-watch.jpg" />
+    <Content Include="Content\images\watches\watch_automatic.jpg" />
+    <Content Include="Content\images\watches\watch_breitling_seawolf.jpg" />
+    <Content Include="Content\images\watches\watch_cartier_tank.jpg" />
+    <Content Include="Content\images\watches\watch_casio_f91w.jpg" />
+    <Content Include="Content\images\watches\watch_hero.jpg" />
+    <Content Include="Content\images\watches\watch_luxury_gold.jpg" />
+    <Content Include="Content\images\watches\watch_mechanical.jpg" />
+    <Content Include="Content\images\watches\watch_omega_chronograph.jpg" />
+    <Content Include="Content\images\watches\watch_omega_seamaster.jpg" />
+    <Content Include="Content\images\watches\watch_omega_speedmaster.jpg" />
+    <Content Include="Content\images\watches\watch_pocket_watch.jpg" />
+    <Content Include="Content\images\watches\watch_rolex_datejust.jpg" />
+    <Content Include="Content\images\watches\watch_rolex_daydate.jpg" />
+    <Content Include="Content\images\watches\watch_rolex_daytona.jpg" />
+    <Content Include="Content\images\watches\watch_rolex_explorer.jpg" />
+    <Content Include="Content\images\watches\watch_rolex_submariner.jpg" />
+    <Content Include="Content\images\watches\watch_tag_monaco.jpg" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\cart.js" />
     <Content Include="Scripts\validation.js" />

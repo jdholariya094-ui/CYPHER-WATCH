@@ -1,78 +1,91 @@
 using System;
-using CYPHER.App_Code;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+//New Namespace
+using System.Data.SqlClient;//For Connection
+using System.Data;//For Dataset
+using System.Configuration;//For Connection String
 
 namespace CYPHER.MasterPages
 {
-    /// <summary>
-    /// Code-behind for Site.Master.
-    /// Handles session display, cart count, and newsletter subscription.
-    /// </summary>
     public partial class SiteMaster : System.Web.UI.MasterPage
     {
-        protected global::System.Web.UI.WebControls.Panel pnlGuest;
-        protected global::System.Web.UI.WebControls.Panel pnlUser;
-        protected global::System.Web.UI.WebControls.LinkButton lnkLogout;
-        protected global::System.Web.UI.WebControls.HiddenField hdnNewsletterEmail;
-        protected global::System.Web.UI.WebControls.Button btnSubscribeServer;
+        SqlConnection con;
+        SqlCommand cmd;
 
-        // Properties exposed to the master page markup
+        string s = ConfigurationManager.ConnectionStrings["CypherDB"].ConnectionString;
+
+        void getcon()
+        {
+            con = new SqlConnection(s);
+            con.Open();
+        }
+
+        // Properties exposed to markup
         public string UserName  { get; private set; }
         public int    CartCount { get; private set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-                RefreshSessionDisplay();
-        }
-
-        /// <summary>Refreshes nav display based on current session state.</summary>
-        private void RefreshSessionDisplay()
-        {
-            bool loggedIn = SessionHelper.IsUserLoggedIn;
-
-            pnlGuest.Visible = !loggedIn;
-            pnlUser.Visible  =  loggedIn;
-
-            if (loggedIn)
             {
-                UserName  = SessionHelper.CurrentUserName;
-                CartCount = SessionHelper.GetCartCount();
-                // Sync from DB once per request
-                SessionHelper.RefreshCartCount();
-                CartCount = SessionHelper.GetCartCount();
+                //Check if user is logged in via Session["user"]
+                if (Session["user"] != null)
+                {
+                    pnlGuest.Visible = false;
+                    pnlUser.Visible  = true;
+                    UserName = Session["user"].ToString();
+
+                    //Get cart count from DB
+                    try
+                    {
+                        getcon();
+                        cmd = new SqlCommand("select isnull(sum(Quantity),0) from Cart where UserID=(select UserID from Users where Email='" + Session["user"].ToString() + "')", con);
+                        CartCount = Convert.ToInt32(cmd.ExecuteScalar());
+                    }
+                    catch { CartCount = 0; }
+                }
+                else
+                {
+                    pnlGuest.Visible = true;
+                    pnlUser.Visible  = false;
+                    UserName  = "";
+                    CartCount = 0;
+                }
             }
         }
 
-        /// <summary>Logout link handler.</summary>
         protected void lnkLogout_Click(object sender, EventArgs e)
         {
-            SessionHelper.LogoutUser();
+            //Clear session and redirect
+            Session["user"] = null;
+            Session.Clear();
             Response.Redirect("~/Pages/Home.aspx");
         }
 
-        /// <summary>Footer newsletter subscription handler.</summary>
         protected void btnSubscribeServer_Click(object sender, EventArgs e)
         {
             string email = hdnNewsletterEmail.Value.Trim();
             if (string.IsNullOrEmpty(email)) return;
 
-            bool ok = DBHelper.SubscribeNewsletter(email);
-
-            // Feedback via JavaScript alert injected on client
-            string msg = ok
-                ? "Thank you for subscribing!"
-                : "You are already subscribed.";
-            string icon = ok ? "fa-check-circle" : "fa-info-circle";
-
-            // Script injection for toast
-            string script = string.Format("window.showToast('{0}','{1}');", msg, icon);
-            Page.ClientScript.RegisterStartupScript(GetType(), "subToast", script, true);
+            try
+            {
+                getcon();
+                cmd = new SqlCommand("insert into NewsletterSubscribers(Email) values('" + email + "')", con);
+                cmd.ExecuteNonQuery();
+                string script = "window.showToast('Thank you for subscribing!','fa-check-circle');";
+                Page.ClientScript.RegisterStartupScript(GetType(), "subToast", script, true);
+            }
+            catch
+            {
+                string script = "window.showToast('You are already subscribed.','fa-info-circle');";
+                Page.ClientScript.RegisterStartupScript(GetType(), "subToast", script, true);
+            }
         }
 
-        /// <summary>
-        /// Returns "active" CSS class if the current page name matches.
-        /// Called from .aspx markup: <%= IsActivePage("Home") %>
-        /// </summary>
         public string IsActivePage(string pageName)
         {
             string path = Request.Url.AbsolutePath.ToLower();
@@ -80,3 +93,4 @@ namespace CYPHER.MasterPages
         }
     }
 }
+

@@ -18,7 +18,7 @@
           <ItemTemplate>
             <div class="col-md-6 col-lg-4">
               <a href='<%# ResolveUrl("~/Pages/Watches.aspx?cat=" + Eval("CategoryID")) %>' class="collection-card d-block text-decoration-none" style="position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.06); transition: all 0.3s ease;">
-                <img src='https://placehold.co/600x450/0A0A0A/C9A84C?text=<%# Server.UrlEncode(Eval("CategoryName").ToString()) %>' alt='<%# Eval("CategoryName") %>' style="width:100%; transition: transform 0.5s ease; object-fit: cover;" />
+                <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("CategoryName") %>' onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" style="width:100%; height:300px; transition: transform 0.5s ease; object-fit: cover;" />
                 <div class="collection-overlay" style="position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%); display:flex; flex-column; justify-content:end; padding:2rem; transition: all 0.3s ease;">
                   <span style="color:#C9A84C; font-size:.7rem; letter-spacing:3px; text-transform:uppercase; font-weight:600;">Collection</span>
                   <h3 style="font-family:'Cormorant Garamond',serif; color:#fff; font-size:1.8rem; margin: 0.2rem 0 0.6rem 0;">

@@ -87,7 +87,7 @@
                 <div class="col-sm-6 col-md-4">
                   <div class="product-card">
                     <div class="product-card-img">
-                      <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' />
+                      <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" />
                       <%# Convert.ToBoolean(Eval("IsNewArrival")) ? "<span class='product-badge new'>NEW</span>" : "" %>
                       <%# Convert.ToDecimal(Eval("DiscountPercent")) > 0 ? "<span class='product-badge sale'>-" + Convert.ToInt32(Eval("DiscountPercent")) + "%</span>" : "" %>
                       <div class="product-card-overlay">

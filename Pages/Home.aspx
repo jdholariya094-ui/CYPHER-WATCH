@@ -41,13 +41,20 @@
           </div>
         </div>
         <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center">
-          <div class="anim-float" style="position:relative;">
-            <div style="width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.15),transparent);
-              border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;">
-              <img src="https://placehold.co/320x320/141414/C9A84C?text=⌚+CYPHER"
-                   alt="CYPHER Luxury Watch"
-                   style="border-radius:50%;width:300px;height:300px;object-fit:cover;
-                          border:3px solid rgba(201,168,76,.4);" />
+          <div class="hero-watch-wrapper">
+            <div class="hero-watch-glow"></div>
+            <div class="hero-watch-ring-outer"></div>
+            <div class="hero-watch-ring-inner"></div>
+            <div class="hero-badge hero-badge-top">
+              <i class="fas fa-certificate text-gold me-1"></i> Swiss Chronometer
+            </div>
+            <div class="hero-watch-img-container">
+              <img src='<%= ResolveUrl("~/Content/images/watches/watch_hero.jpg") %>'
+                   alt="CYPHER Luxury Watch" />
+            </div>
+            <div class="hero-badge hero-badge-bottom">
+              <div class="badge-title">AUTOMATIC</div>
+              <div class="badge-sub">Limited Production</div>
             </div>
           </div>
         </div>
@@ -102,7 +109,7 @@
             <div class="col-sm-6 col-lg-3 reveal">
               <div class="product-card hover-lift">
                 <div class="product-card-img">
-                  <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' loading="lazy" />
+                  <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' loading="lazy" onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" />
                   <div class="product-card-overlay">
                     <button class="overlay-btn quick-view-btn" data-pid='<%# Eval("ProductID") %>' title="Quick View">
                       <i class="fas fa-eye"></i>
@@ -155,7 +162,7 @@
       <div class="row g-4">
         <div class="col-md-4 reveal">
           <a href="<%= ResolveUrl("~/Pages/Collections.aspx?cat=1") %>" class="collection-card d-block text-decoration-none">
-            <img src="https://placehold.co/600x450/0A0A0A/C9A84C?text=Luxury+Collection" alt="Luxury" />
+            <img src='<%= ResolveUrl("~/Content/images/watches/watch_luxury_gold.jpg") %>' alt="Luxury Collection" />
             <div class="collection-overlay">
               <span style="color:#C9A84C;font-size:.7rem;letter-spacing:3px;text-transform:uppercase;">Premium</span>
               <h3 style="font-family:'Cormorant Garamond',serif;color:#fff;font-size:1.8rem;margin:0;">Luxury</h3>
@@ -165,7 +172,7 @@
         </div>
         <div class="col-md-4 reveal delay-1">
           <a href="<%= ResolveUrl("~/Pages/Collections.aspx?cat=3") %>" class="collection-card d-block text-decoration-none">
-            <img src="https://placehold.co/600x450/0A0A0A/C9A84C?text=Sports+Collection" alt="Sports" />
+            <img src='<%= ResolveUrl("~/Content/images/watches/watch_tag_monaco.jpg") %>' alt="Sports Collection" />
             <div class="collection-overlay">
               <span style="color:#C9A84C;font-size:.7rem;letter-spacing:3px;text-transform:uppercase;">Performance</span>
               <h3 style="font-family:'Cormorant Garamond',serif;color:#fff;font-size:1.8rem;margin:0;">Sports</h3>
@@ -175,7 +182,7 @@
         </div>
         <div class="col-md-4 reveal delay-2">
           <a href="<%= ResolveUrl("~/Pages/Collections.aspx?cat=5") %>" class="collection-card d-block text-decoration-none">
-            <img src="https://placehold.co/600x450/0A0A0A/C9A84C?text=Limited+Edition" alt="Limited" />
+            <img src='<%= ResolveUrl("~/Content/images/watches/watch_hero.jpg") %>' alt="Limited Edition" />
             <div class="collection-overlay">
               <span style="color:#C9A84C;font-size:.7rem;letter-spacing:3px;text-transform:uppercase;">Exclusive</span>
               <h3 style="font-family:'Cormorant Garamond',serif;color:#fff;font-size:1.8rem;margin:0;">Limited Edition</h3>
@@ -204,7 +211,7 @@
             <div class="col-sm-6 col-lg-3 reveal">
               <div class="product-card hover-lift">
                 <div class="product-card-img">
-                  <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' loading="lazy" />
+                  <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' loading="lazy" onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" />
                   <span class="product-badge new">NEW</span>
                   <div class="product-card-overlay">
                     <button class="overlay-btn quick-view-btn" data-pid='<%# Eval("ProductID") %>' title="Quick View">
@@ -244,7 +251,7 @@
             <div class="col-sm-6 col-lg-3 reveal">
               <div class="product-card hover-lift">
                 <div class="product-card-img">
-                  <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' loading="lazy" />
+                  <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' loading="lazy" onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" />
                   <span class="product-badge hot">HOT</span>
                   <div class="product-card-overlay">
                     <button class="overlay-btn quick-view-btn" data-pid='<%# Eval("ProductID") %>' title="Quick View">

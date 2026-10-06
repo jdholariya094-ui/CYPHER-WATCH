@@ -33,7 +33,7 @@
                   <asp:TemplateField HeaderText="Timepiece" HeaderStyle-CssClass="text-muted font-weight-bold">
                     <ItemTemplate>
                       <div class="d-flex align-items-center gap-3">
-                        <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' style="width:60px; height:60px; object-fit:contain; border:1px solid rgba(255,255,255,0.05); border-radius:6px; background:#1A1A1A;" />
+                        <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" style="width:60px; height:60px; object-fit:contain; border:1px solid rgba(255,255,255,0.05); border-radius:6px; background:#1A1A1A;" />
                         <div>
                           <span class="text-warning text-uppercase" style="font-size:0.65rem; letter-spacing:1px; display:block;"><%# Eval("BrandName") %></span>
                           <strong style="color:#FFF; font-size:0.9rem;"><%# Eval("ProductName") %></strong>

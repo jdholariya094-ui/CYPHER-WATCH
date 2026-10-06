@@ -204,14 +204,130 @@ img { max-width: 100%; height: auto; }
 .hero-section::before {
   content: '';
   position: absolute; inset: 0;
-  background: url('https://placehold.co/1920x1080/0A0A0A/1A1A1A?text=') center/cover no-repeat;
-  opacity: 0.3;
+  background: radial-gradient(circle at 75% 45%, rgba(201, 168, 76, 0.15) 0%, transparent 65%),
+              radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .hero-section::after {
   content: '';
   position: absolute; inset: 0;
   background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
+}
+
+/* Hero Showcase */
+.hero-watch-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 440px;
+  height: 440px;
+}
+
+.hero-watch-glow {
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.22) 0%, rgba(201,168,76,0.05) 50%, transparent 70%);
+  filter: blur(20px);
+  animation: pulseGlow 4s ease-in-out infinite alternate;
+}
+
+.hero-watch-ring-outer {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  border: 1px dashed rgba(201,168,76,0.35);
+  animation: spinSlow 60s linear infinite;
+}
+
+.hero-watch-ring-inner {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.25);
+}
+
+.hero-watch-img-container {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(201,168,76,0.25);
+  border: 3px solid rgba(201,168,76,0.65);
+  background: #0A0A0A;
+}
+
+.hero-watch-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-watch-wrapper:hover .hero-watch-img-container img {
+  transform: scale(1.06);
+}
+
+.hero-badge {
+  position: absolute;
+  background: rgba(20, 20, 20, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 30px;
+  padding: 0.6rem 1.2rem;
+  color: var(--white);
+  font-size: 0.78rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  z-index: 3;
+}
+
+.hero-badge-top {
+  top: 15px;
+  right: -10px;
+  animation: floatSlow 5s ease-in-out infinite alternate;
+}
+
+.hero-badge-bottom {
+  bottom: 25px;
+  left: -15px;
+  border-radius: 12px;
+  padding: 0.65rem 1.2rem;
+  animation: floatSlow 5s ease-in-out infinite alternate-reverse;
+}
+
+.hero-badge-bottom .badge-title {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+}
+
+.hero-badge-bottom .badge-sub {
+  color: var(--silver);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); opacity: 0.6; }
+  100% { transform: scale(1.1); opacity: 0.9; }
+}
+
+@keyframes floatSlow {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-8px); }
 }
 
 .hero-content { position: relative; z-index: 2; }
@@ -694,4 +810,160 @@ img { max-width: 100%; height: auto; }
   .hero-title  { font-size: 2.4rem; }
   .section-pad { padding: 3rem 0; }
   .footer-bottom { flex-direction: column; text-align: center; }
+}
+
+/* ============================================================
+   DESIGN FIXES — global overrides
+   ============================================================ */
+
+/* Fix Bootstrap's white bg override on form-control */
+.form-control,
+.form-select {
+  background-color: var(--surface) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--surface) !important;
+  border-color: var(--gold) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.12) !important;
+  outline: none !important;
+}
+
+.form-control::placeholder { color: #555 !important; }
+
+.form-control[readonly] {
+  background-color: rgba(255,255,255,0.03) !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Fix checkbox appearance */
+.form-check-input {
+  background-color: var(--surface) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  width: 16px; height: 16px;
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: var(--gold) !important;
+  border-color: var(--gold) !important;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.2) !important;
+}
+
+/* Fix Bootstrap dropdown in dark theme */
+.dropdown-menu {
+  background: #1A1A1A !important;
+  border: 1px solid rgba(201,168,76,0.2) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(201,168,76,0.08) !important;
+  color: var(--gold) !important;
+}
+
+/* Fix alert boxes */
+.alert {
+  border-radius: var(--radius-sm) !important;
+  font-size: 0.85rem !important;
+}
+
+.alert-danger {
+  background: rgba(231,76,60,0.08) !important;
+  border-color: rgba(231,76,60,0.25) !important;
+  color: #e74c3c !important;
+}
+
+.alert-success {
+  background: rgba(46,204,113,0.08) !important;
+  border-color: rgba(46,204,113,0.25) !important;
+  color: #2ecc71 !important;
+}
+
+/* Fix navbar mobile collapse */
+@media (max-width: 992px) {
+  #navMain {
+    background: rgba(10,10,10,0.98);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 1rem 0;
+    margin-top: 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .navbar-nav { gap: 0 !important; }
+
+  .nav-link-cypher {
+    padding: 0.7rem 1rem !important;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+}
+
+/* Fix glass card on Login/Register */
+.glass-card {
+  background: rgba(20,20,20,0.85) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(201,168,76,0.12) !important;
+  border-radius: var(--radius) !important;
+}
+
+/* Fix btn-gold on asp:Button (removes browser default input styling) */
+input[type="submit"].btn-gold,
+input[type="button"].btn-gold {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Fix btn-login-pill on dropdown-toggle */
+.btn-login-pill.dropdown-toggle::after {
+  border-top-color: var(--gold);
+  margin-left: 6px;
+}
+
+/* Dashboard sidebar active button */
+.btn-warning {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold)) !important;
+  border: none !important;
+  color: #0A0A0A !important;
+  font-weight: 600 !important;
+}
+
+/* Fix table styling if used */
+.table {
+  color: var(--text-primary) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+.table td, .table th {
+  border-color: rgba(255,255,255,0.06) !important;
+  padding: 0.75rem 1rem !important;
+  vertical-align: middle !important;
+}
+
+/* Better hr separator */
+hr {
+  border-color: rgba(255,255,255,0.07) !important;
+  opacity: 1 !important;
+}
+
+/* Fix breadcrumb separator color */
+.breadcrumb-item + .breadcrumb-item::before {
+  color: rgba(255,255,255,0.3) !important;
+}
+
+/* Smooth page transitions */
+.asp\:Content, asp\.Content {
+  animation: fadeInUp 0.4s ease forwards;
 }

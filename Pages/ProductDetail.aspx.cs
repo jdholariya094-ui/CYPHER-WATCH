@@ -83,7 +83,8 @@ namespace CYPHER.Pages
                     lblDescription.Text = GetVal(product, "", "Description");
 
                     // Image
-                    imgProduct.ImageUrl = GetVal(product, "https://placehold.co/600x600/0A0A0A/C9A84C?text=Timepiece", "ImageURL", "ProductImage");
+                    imgProduct.ImageUrl = GetVal(product, ResolveUrl("~/Content/images/watches/watch_hero.jpg"), "ImageURL", "ProductImage");
+                    imgProduct.Attributes["onerror"] = "this.onerror=null;this.src='" + ResolveUrl("~/Content/images/watches/watch_hero.jpg") + "';";
 
                     // Price & Discount
                     decimal price = Convert.ToDecimal(product["Price"]);
@@ -247,6 +248,16 @@ namespace CYPHER.Pages
 
         public string GetStarsHtml(int rating)
         {
+            return GetStarsHtml((object)rating);
+        }
+
+        public string GetStarsHtml(object ratingObj)
+        {
+            int rating = 5;
+            if (ratingObj != null && ratingObj != DBNull.Value)
+            {
+                int.TryParse(ratingObj.ToString(), out rating);
+            }
             string html = "";
             for (int i = 1; i <= 5; i++)
             {
@@ -254,6 +265,42 @@ namespace CYPHER.Pages
                 else html += "<i class=\"far fa-star\"></i>";
             }
             return html;
+        }
+
+        public string GetReviewDate(object dataItem)
+        {
+            try
+            {
+                DataRowView rowView = dataItem as DataRowView;
+                if (rowView != null)
+                {
+                    if (rowView.Row.Table.Columns.Contains("CreatedAt") && rowView["CreatedAt"] != DBNull.Value)
+                    {
+                        DateTime dt;
+                        if (DateTime.TryParse(rowView["CreatedAt"].ToString(), out dt))
+                            return dt.ToString("MMMM dd, yyyy");
+                    }
+                    if (rowView.Row.Table.Columns.Contains("CreatedDate") && rowView["CreatedDate"] != DBNull.Value)
+                    {
+                        DateTime dt;
+                        if (DateTime.TryParse(rowView["CreatedDate"].ToString(), out dt))
+                            return dt.ToString("MMMM dd, yyyy");
+                    }
+                }
+            }
+            catch { }
+            return "";
+        }
+
+        public string FormatReviewDate(object dateObj)
+        {
+            if (dateObj == null || dateObj == DBNull.Value) return "";
+            DateTime dt;
+            if (DateTime.TryParse(dateObj.ToString(), out dt))
+            {
+                return dt.ToString("MMMM dd, yyyy");
+            }
+            return dateObj.ToString();
         }
 
         private string GetVal(DataRow row, string defaultVal, params string[] columnNames)

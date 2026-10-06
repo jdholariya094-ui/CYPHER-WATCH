@@ -11,7 +11,7 @@
               <div class="title-line mx-auto" style="width: 40px;"></div>
             </div>
 
-            <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger bg-dark text-danger border-danger mb-4" style="border-color: rgba(231, 76, 60, 0.3) !important; font-size: 0.85rem;">
+            <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="alert alert-danger bg-dark text-danger border-danger mb-4" style="font-size: 0.85rem; top: 0px; left: 0px;">
               <i class="fas fa-exclamation-circle me-2"></i> <asp:Label ID="lblError" runat="server" />
             </asp:Panel>
 
@@ -26,10 +26,7 @@
                 <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="e.g. john@example.com" TextMode="Email" />
               </div>
 
-              <div class="col-12">
-                <label for="<%= txtPhone.ClientID %>">Phone Number</label>
-                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" placeholder="e.g. +91 98765 43210" />
-              </div>
+             
 
               <div class="col-md-6">
                 <label for="<%= txtPassword.ClientID %>">Password *</label>

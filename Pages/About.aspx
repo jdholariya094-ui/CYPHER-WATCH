@@ -17,8 +17,8 @@
     <div class="container">
       <div class="row align-items-center g-5">
         <div class="col-lg-6">
-          <div style="border: 1px solid rgba(201,168,76,0.2); padding: 10px; border-radius: 12px; background: #111;">
-            <img src="https://placehold.co/800x600/0A0A0A/C9A84C?text=Horological+Craftsmanship" alt="Watchmaking" class="img-fluid rounded" style="opacity: 0.85;" />
+          <div style="border: 1px solid rgba(201,168,76,0.3); padding: 10px; border-radius: 12px; background: #111; box-shadow: 0 15px 35px rgba(0,0,0,0.6);">
+            <img src='<%= ResolveUrl("~/Content/images/watches/watch_mechanical.jpg") %>' alt="Watchmaking" class="img-fluid rounded" style="width:100%; height:380px; object-fit:cover;" />
           </div>
         </div>
         <div class="col-lg-6">
@@ -55,39 +55,39 @@
     </div>
   </section>
 
-  <!-- Showcase / Gallery -->
+  <!-- Showcase / Signature Timepieces -->
   <section class="section-pad" style="background:#0F0F0F; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);">
     <div class="container">
       <div class="text-center mb-5">
-        <p class="section-eyebrow mb-1">Curation</p>
-        <h2 class="section-title">The Showrooms</h2>
+        <p class="section-eyebrow mb-1">Horological Art</p>
+        <h2 class="section-title">Signature Masterpieces</h2>
         <div class="title-line mx-auto"></div>
       </div>
       <div class="row g-4">
         <div class="col-md-4">
-          <div class="card bg-dark border-0 overflow-hidden" style="border-radius:12px; group-hover:transform;">
-            <img src="https://placehold.co/600x450/141414/C9A84C?text=Geneva+Salon" class="card-img" alt="Geneva" style="opacity:0.75;" />
-            <div class="card-img-overlay d-flex flex-column justify-content-end bg-gradient-dark" style="background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.9) 100%);">
-              <h4 style="color:#fff; font-family:'Cormorant Garamond',serif; margin:0;">Geneva Salon</h4>
-              <p style="color:#C9A84C; font-size:0.75rem; letter-spacing:1px; margin:0;">SWITZERLAND</p>
+          <div class="card bg-dark border-0 overflow-hidden" style="border-radius:12px;">
+            <img src='<%= ResolveUrl("~/Content/images/watches/watch_hero.jpg") %>' class="card-img" alt="Geneva Tourbillon Watch" style="height:260px; object-fit:cover;" />
+            <div class="card-img-overlay d-flex flex-column justify-content-end bg-gradient-dark" style="background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.92) 100%);">
+              <h4 style="color:#fff; font-family:'Cormorant Garamond',serif; margin:0;">Geneva Tourbillon</h4>
+              <p style="color:#C9A84C; font-size:0.75rem; letter-spacing:1px; margin:0;">SWISS EDITION</p>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="card bg-dark border-0 overflow-hidden" style="border-radius:12px;">
-            <img src="https://placehold.co/600x450/141414/C9A84C?text=London+Gallery" class="card-img" alt="London" style="opacity:0.75;" />
-            <div class="card-img-overlay d-flex flex-column justify-content-end bg-gradient-dark" style="background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.9) 100%);">
-              <h4 style="color:#fff; font-family:'Cormorant Garamond',serif; margin:0;">London Gallery</h4>
-              <p style="color:#C9A84C; font-size:0.75rem; letter-spacing:1px; margin:0;">UNITED KINGDOM</p>
+            <img src='<%= ResolveUrl("~/Content/images/watches/watch_omega_chronograph.jpg") %>' class="card-img" alt="London Heritage Chronograph" style="height:260px; object-fit:cover;" />
+            <div class="card-img-overlay d-flex flex-column justify-content-end bg-gradient-dark" style="background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.92) 100%);">
+              <h4 style="color:#fff; font-family:'Cormorant Garamond',serif; margin:0;">Heritage Chronograph</h4>
+              <p style="color:#C9A84C; font-size:0.75rem; letter-spacing:1px; margin:0;">PRECISION MECHANICAL</p>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="card bg-dark border-0 overflow-hidden" style="border-radius:12px;">
-            <img src="https://placehold.co/600x450/141414/C9A84C?text=Mumbai+Boutique" class="card-img" alt="Mumbai" style="opacity:0.75;" />
-            <div class="card-img-overlay d-flex flex-column justify-content-end bg-gradient-dark" style="background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.9) 100%);">
-              <h4 style="color:#fff; font-family:'Cormorant Garamond',serif; margin:0;">Mumbai Boutique</h4>
-              <p style="color:#C9A84C; font-size:0.75rem; letter-spacing:1px; margin:0;">INDIA</p>
+            <img src='<%= ResolveUrl("~/Content/images/watches/watch_luxury_gold.jpg") %>' class="card-img" alt="Imperial Gold Watch" style="height:260px; object-fit:cover;" />
+            <div class="card-img-overlay d-flex flex-column justify-content-end bg-gradient-dark" style="background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.92) 100%);">
+              <h4 style="color:#fff; font-family:'Cormorant Garamond',serif; margin:0;">Imperial Gold</h4>
+              <p style="color:#C9A84C; font-size:0.75rem; letter-spacing:1px; margin:0;">HEIRLOOM CRAFT</p>
             </div>
           </div>
         </div>

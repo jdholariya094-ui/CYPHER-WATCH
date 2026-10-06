@@ -89,8 +89,11 @@
               </ul>
             </div>
 
-            <div style="border: 1px solid rgba(201,168,76,0.15); padding: 5px; border-radius: 12px; background: #111;">
-              <img src="https://placehold.co/600x320/0A0A0A/C9A84C?text=Map+Location" alt="Location Map" class="img-fluid rounded" style="opacity: 0.85;" />
+            <div style="border: 1px solid rgba(201,168,76,0.25); padding: 6px; border-radius: 12px; background: #111; overflow:hidden; position:relative;">
+              <img src='<%= ResolveUrl("~/Content/images/watches/watch_rolex_daydate.jpg") %>' alt="CYPHER Flagship Timepiece" class="img-fluid rounded" style="width:100%; height:220px; object-fit:cover;" />
+              <div style="position:absolute; bottom:12px; left:16px; background:rgba(0,0,0,0.82); backdrop-filter:blur(6px); padding:4px 10px; border-radius:6px; border:1px solid rgba(201,168,76,0.3);">
+                <span style="color:#C9A84C; font-size:0.75rem; font-weight:600; letter-spacing:1px;"><i class="fas fa-gem me-1"></i>CYPHER Flagship Timepiece</span>
+              </div>
             </div>
           </div>
         </div>

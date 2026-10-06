@@ -5,6 +5,20 @@
 (function () {
   'use strict';
 
+  // ── Global Image Error Fallback ────────────────────────────
+  window.addEventListener('error', function (e) {
+    if (e.target && e.target.tagName === 'IMG') {
+      var img = e.target;
+      if (!img.dataset.fallbackApplied) {
+        img.dataset.fallbackApplied = 'true';
+        var fallback = window.CYPHER_FALLBACK_IMG || '/Content/images/watches/watch_hero.jpg';
+        if (img.src !== fallback) {
+          img.src = fallback;
+        }
+      }
+    }
+  }, true);
+
   // ── Sticky Navbar ──────────────────────────────────────────
   var navbar = document.querySelector('.navbar-cypher');
   if (navbar) {

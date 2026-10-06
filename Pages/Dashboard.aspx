@@ -123,7 +123,7 @@
                         <ItemTemplate>
                           <div class="d-flex align-items-center justify-content-between gap-3" style="font-size:0.82rem;">
                             <div class="d-flex align-items-center gap-2">
-                              <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' style="width:30px; height:30px; object-fit:contain; border-radius:4px; background:#1A1A1A;" />
+                              <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" style="width:30px; height:30px; object-fit:contain; border-radius:4px; background:#1A1A1A;" />
                               <div>
                                 <span style="color:#FFF;"><%# Eval("ProductName") %></span>
                                 <small class="text-muted d-block"><%# Eval("BrandName") %> &bull; Qty: <%# Eval("Quantity") %></small>
@@ -156,7 +156,7 @@
                     <div class="col-sm-6">
                       <div class="p-3 d-flex align-items-center justify-content-between gap-3 glass-card" style="border:1px solid rgba(255,255,255,0.04); background:#141414;">
                         <div class="d-flex align-items-center gap-3">
-                          <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' style="width:50px; height:50px; object-fit:contain; border-radius:4px; background:#1A1A1A; border:1px solid rgba(255,255,255,0.05);" />
+                          <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" style="width:50px; height:50px; object-fit:contain; border-radius:4px; background:#1A1A1A; border:1px solid rgba(255,255,255,0.05);" />
                           <div>
                             <span style="font-size:0.65rem; color:#C9A84C; text-transform:uppercase; letter-spacing:1px; display:block;"><%# Eval("BrandName") %></span>
                             <a href='<%# ResolveUrl("~/Pages/ProductDetail.aspx?id=" + Eval("ProductID")) %>' style="font-size:0.88rem; color:#FFF; font-weight:600;"><%# Eval("ProductName") %></a>

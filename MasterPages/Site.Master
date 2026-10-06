@@ -15,8 +15,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <!-- CYPHER CSS -->
-  <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/site.css") %>" />
-  <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/animations.css") %>" />
+  <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/site.css?v=2.1") %>" />
+  <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/animations.css?v=2.1") %>" />
+  <script>
+    window.CYPHER_FALLBACK_IMG = '<%= ResolveUrl("~/Content/images/watches/watch_hero.jpg") %>';
+  </script>
   <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 </head>
 <body>
@@ -211,13 +214,13 @@
         <!-- Footer Bottom -->
         <div class="footer-bottom">
           <span class="footer-copy">
-            &copy; <%= DateTime.Now.Year %> CYPHER Watches. All rights reserved.
+            &copy; <%= DateTime.Now.Year %> CYPHER Watches. All rights reserved. &bull; <a href="<%= ResolveUrl("~/Admin/Dashboard.aspx") %>" style="color:#777; font-size:0.75rem;"><i class="fas fa-shield-alt me-1 text-gold"></i>Admin Portal</a>
           </span>
-          <div class="d-flex align-items-center gap-2">
-            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=VISA"    alt="Visa"       style="border-radius:3px;" />
-            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=MC"      alt="Mastercard" style="border-radius:3px;" />
-            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=UPI"     alt="UPI"        style="border-radius:3px;" />
-            <img src="https://placehold.co/40x25/1A1A1A/C9A84C?text=PayTm"   alt="Paytm"      style="border-radius:3px;" />
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span style="color:#C9A84C; border:1px solid rgba(201,168,76,0.25); border-radius:4px; padding:3px 8px; font-size:0.75rem; background:rgba(20,20,20,0.9); font-weight:600;"><i class="fab fa-cc-visa me-1"></i>VISA</span>
+            <span style="color:#C9A84C; border:1px solid rgba(201,168,76,0.25); border-radius:4px; padding:3px 8px; font-size:0.75rem; background:rgba(20,20,20,0.9); font-weight:600;"><i class="fab fa-cc-mastercard me-1"></i>MC</span>
+            <span style="color:#C9A84C; border:1px solid rgba(201,168,76,0.25); border-radius:4px; padding:3px 8px; font-size:0.75rem; background:rgba(20,20,20,0.9); font-weight:600;"><i class="fas fa-wallet me-1"></i>UPI</span>
+            <span style="color:#C9A84C; border:1px solid rgba(201,168,76,0.25); border-radius:4px; padding:3px 8px; font-size:0.75rem; background:rgba(20,20,20,0.9); font-weight:600;"><i class="fas fa-shield-alt me-1"></i>256-BIT SSL</span>
           </div>
         </div>
       </div>
@@ -252,7 +255,7 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- CYPHER Scripts -->
-    <script src="<%= ResolveUrl("~/Scripts/site.js") %>"></script>
+    <script src="<%= ResolveUrl("~/Scripts/site.js?v=2.1") %>"></script>
     <script src="<%= ResolveUrl("~/Scripts/cart.js") %>"></script>
     <script src="<%= ResolveUrl("~/Scripts/validation.js") %>"></script>
 

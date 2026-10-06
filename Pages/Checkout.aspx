@@ -107,7 +107,7 @@
                 <ItemTemplate>
                   <div class="d-flex align-items-center justify-content-between gap-3">
                     <div class="d-flex align-items-center gap-2">
-                      <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' style="width:40px; height:40px; object-fit:contain; border-radius:4px; border:1px solid rgba(255,255,255,0.05);" />
+                      <img src='<%# Eval("ImageURL") %>' alt='<%# Eval("ProductName") %>' onerror="this.onerror=null;this.src=window.CYPHER_FALLBACK_IMG||'/Content/images/watches/watch_hero.jpg';" style="width:40px; height:40px; object-fit:contain; border-radius:4px; border:1px solid rgba(255,255,255,0.05);" />
                       <div>
                         <span style="font-size:0.82rem; color:#FFF; display:block; max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title='<%# Eval("ProductName") %>'><%# Eval("ProductName") %></span>
                         <small class="text-muted">Qty: <%# Eval("Quantity") %></small>

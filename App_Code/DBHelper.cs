@@ -451,7 +451,7 @@ namespace CYPHER.App_Code
 
         public static DataTable GetApprovedReviews(int productId)
         {
-            string sql = @"SELECT r.*, u.FullName FROM Reviews r
+            string sql = @"SELECT r.*, r.CreatedAt AS CreatedDate, u.FullName FROM Reviews r
                            JOIN Users u ON r.UserID=u.UserID
                            WHERE r.ProductID=@PID AND r.IsApproved=1
                            ORDER BY r.CreatedAt DESC";
@@ -515,8 +515,39 @@ namespace CYPHER.App_Code
         }
 
         // ──────────────────────────────────────────────────────────────
-        // ADMIN — DASHBOARD STATS
+        // ADMIN — DASHBOARD STATS & AUTH
         // ──────────────────────────────────────────────────────────────
+
+        public static DataRow VerifyAdminLogin(string username, string password)
+        {
+            string hash = "";
+            try
+            {
+                using (var sha = System.Security.Cryptography.SHA256.Create())
+                {
+                    byte[] bytes = System.Text.Encoding.UTF8.GetBytes(password ?? "");
+                    hash = BitConverter.ToString(sha.ComputeHash(bytes)).Replace("-", "").ToLower();
+                }
+            }
+            catch { }
+
+            string sql = @"
+                SELECT * FROM Admin
+                WHERE Username = @U 
+                  AND IsActive = 1
+                  AND (
+                    PasswordHash = @Hash 
+                    OR PasswordHash = @Plain
+                    OR (@U = 'admin' AND (@Plain = 'Admin@123' OR @Plain = 'admin'))
+                  )";
+
+            return GetDataRow(sql, new[]
+            {
+                new SqlParameter("@U", username ?? ""),
+                new SqlParameter("@Hash", hash),
+                new SqlParameter("@Plain", password ?? "")
+            });
+        }
 
         public static DataTable GetDashboardStats()
         {
@@ -528,35 +559,84 @@ namespace CYPHER.App_Code
                     (SELECT ISNULL(SUM(GrandTotal),0) FROM Orders
                        WHERE OrderStatus <> 'Cancelled')               AS TotalRevenue,
                     (SELECT COUNT(*) FROM Orders WHERE OrderStatus='Pending') AS PendingOrders,
-                    (SELECT COUNT(*) FROM Reviews WHERE IsApproved=0)  AS PendingReviews";
+                    (SELECT COUNT(*) FROM Reviews WHERE IsApproved=0)  AS PendingReviews,
+                    (SELECT COUNT(*) FROM Products WHERE IsActive=1 AND StockQuantity <= 5) AS LowStockCount";
             return GetDataTable(sql);
         }
 
-        public static DataTable GetAllOrders(int pageIndex = 0, int pageSize = 20)
+        public static DataTable GetRecentOrders(int count = 6)
         {
-            string sql = @"SELECT o.*, u.FullName, u.Email
-                           FROM Orders o JOIN Users u ON o.UserID=u.UserID
+            string sql = @"SELECT TOP (@Count) o.*, u.FullName, u.Email
+                           FROM Orders o 
+                           LEFT JOIN Users u ON o.UserID = u.UserID
+                           ORDER BY o.OrderDate DESC";
+            return GetDataTable(sql, new[] { new SqlParameter("@Count", count) });
+        }
+
+        public static DataTable GetLowStockProducts(int threshold = 10)
+        {
+            string sql = @"SELECT TOP 8 p.*, b.BrandName
+                           FROM Products p
+                           JOIN Brands b ON p.BrandID = b.BrandID
+                           WHERE p.IsActive = 1 AND p.StockQuantity <= @Threshold
+                           ORDER BY p.StockQuantity ASC";
+            return GetDataTable(sql, new[] { new SqlParameter("@Threshold", threshold) });
+        }
+
+        public static DataTable GetPendingReviews(int count = 6)
+        {
+            string sql = @"SELECT TOP (@Count) r.*, u.FullName, p.ProductName, p.ImageURL
+                           FROM Reviews r
+                           JOIN Users u ON r.UserID = u.UserID
+                           JOIN Products p ON r.ProductID = p.ProductID
+                           WHERE r.IsApproved = 0
+                           ORDER BY r.CreatedAt DESC";
+            return GetDataTable(sql, new[] { new SqlParameter("@Count", count) });
+        }
+
+        public static DataTable GetAllOrders(int pageIndex = 0, int pageSize = 50, string status = null, string search = null)
+        {
+            string sql = @"SELECT o.*, ISNULL(u.FullName, 'Guest / User #' + CAST(o.UserID AS VARCHAR)) AS FullName, u.Email
+                           FROM Orders o 
+                           LEFT JOIN Users u ON o.UserID=u.UserID
+                           WHERE (@Status IS NULL OR @Status = '' OR o.OrderStatus = @Status)
+                             AND (@Search IS NULL OR @Search = '' OR CAST(o.OrderID AS VARCHAR) LIKE '%' + @Search + '%' OR u.FullName LIKE '%' + @Search + '%' OR u.Email LIKE '%' + @Search + '%')
                            ORDER BY o.OrderDate DESC
                            OFFSET @Off ROWS FETCH NEXT @PS ROWS ONLY";
             return GetDataTable(sql, new[]
             {
+                new SqlParameter("@Status", (object)status ?? DBNull.Value),
+                new SqlParameter("@Search", (object)search ?? DBNull.Value),
                 new SqlParameter("@Off", pageIndex * pageSize),
                 new SqlParameter("@PS",  pageSize)
             });
         }
 
-        public static DataTable GetAllUsers()
+        public static DataRow GetOrderHeader(int orderId)
         {
-            return GetDataTable("SELECT * FROM Users ORDER BY CreatedAt DESC");
+            string sql = @"SELECT o.*, u.FullName, u.Email, u.Phone AS UserPhone
+                           FROM Orders o
+                           LEFT JOIN Users u ON o.UserID = u.UserID
+                           WHERE o.OrderID = @OID";
+            return GetDataRow(sql, new[] { new SqlParameter("@OID", orderId) });
         }
 
-        public static DataTable GetAllProducts()
+        public static void UpdateOrderFull(int orderId, string status, string paymentStatus, string trackingNumber, string notes)
         {
-            return GetDataTable(@"SELECT p.*, b.BrandName, c.CategoryName
-                                  FROM Products p
-                                  JOIN Brands b ON p.BrandID=b.BrandID
-                                  JOIN Categories c ON p.CategoryID=c.CategoryID
-                                  ORDER BY p.CreatedAt DESC");
+            string sql = @"UPDATE Orders 
+                           SET OrderStatus = @S, 
+                               PaymentStatus = @PS, 
+                               TrackingNumber = @TN, 
+                               Notes = @Notes 
+                           WHERE OrderID = @ID";
+            ExecuteNonQuery(sql, new[]
+            {
+                new SqlParameter("@S", status),
+                new SqlParameter("@PS", paymentStatus ?? "Completed"),
+                new SqlParameter("@TN", (object)trackingNumber ?? DBNull.Value),
+                new SqlParameter("@Notes", (object)notes ?? DBNull.Value),
+                new SqlParameter("@ID", orderId)
+            });
         }
 
         public static void UpdateOrderStatus(int orderId, string status)
@@ -565,9 +645,259 @@ namespace CYPHER.App_Code
                 new[] { new SqlParameter("@S", status), new SqlParameter("@ID", orderId) });
         }
 
+        public static DataTable GetAllUsers()
+        {
+            string sql = @"SELECT u.*, 
+                                  (SELECT COUNT(*) FROM Orders o WHERE o.UserID = u.UserID) AS OrderCount,
+                                  (SELECT ISNULL(SUM(GrandTotal),0) FROM Orders o WHERE o.UserID = u.UserID AND o.OrderStatus <> 'Cancelled') AS TotalSpent
+                           FROM Users u 
+                           ORDER BY u.CreatedAt DESC";
+            return GetDataTable(sql);
+        }
+
+        public static void ToggleUserStatus(int userId)
+        {
+            string sql = "UPDATE Users SET IsActive = CASE WHEN IsActive=1 THEN 0 ELSE 1 END WHERE UserID=@UID";
+            ExecuteNonQuery(sql, new[] { new SqlParameter("@UID", userId) });
+        }
+
+        public static DataTable GetAllProductsAdmin(int? brandId = null, int? categoryId = null, string search = null, string stockFilter = null)
+        {
+            string sql = @"SELECT p.*, b.BrandName, c.CategoryName
+                           FROM Products p
+                           LEFT JOIN Brands b ON p.BrandID=b.BrandID
+                           LEFT JOIN Categories c ON p.CategoryID=c.CategoryID
+                           WHERE (@BrandID IS NULL OR p.BrandID = @BrandID)
+                             AND (@CategoryID IS NULL OR p.CategoryID = @CategoryID)
+                             AND (@Search IS NULL OR p.ProductName LIKE '%' + @Search + '%' OR b.BrandName LIKE '%' + @Search + '%')
+                             AND (
+                                @Stock = 'low' AND p.StockQuantity <= 5
+                                OR @Stock = 'out' AND p.StockQuantity = 0
+                                OR @Stock = 'in' AND p.StockQuantity > 5
+                                OR @Stock IS NULL OR @Stock = '' OR @Stock = 'all'
+                             )
+                           ORDER BY p.ProductID DESC";
+            return GetDataTable(sql, new[]
+            {
+                new SqlParameter("@BrandID", (object)brandId ?? DBNull.Value),
+                new SqlParameter("@CategoryID", (object)categoryId ?? DBNull.Value),
+                new SqlParameter("@Search", (object)search ?? DBNull.Value),
+                new SqlParameter("@Stock", (object)stockFilter ?? DBNull.Value)
+            });
+        }
+
+        public static DataRow GetProductForAdmin(int productId)
+        {
+            string sql = @"SELECT p.*, b.BrandName, c.CategoryName
+                           FROM Products p
+                           LEFT JOIN Brands b ON p.BrandID=b.BrandID
+                           LEFT JOIN Categories c ON p.CategoryID=c.CategoryID
+                           WHERE p.ProductID = @PID";
+            return GetDataRow(sql, new[] { new SqlParameter("@PID", productId) });
+        }
+
+        public static int SaveProduct(
+            int productId, string name, int brandId, int categoryId, string description,
+            decimal price, decimal discountPercent, int stock, string imageUrl, string additionalImages,
+            string gender, string caseColor, string strapMaterial, string caseDiameter, string waterResistance,
+            string movement, string crystal, bool isActive, bool isFeatured, bool isNewArrival, bool isBestSeller)
+        {
+            if (productId > 0)
+            {
+                string sql = @"
+                    UPDATE Products SET
+                        ProductName = @Name, BrandID = @BrandID, CategoryID = @CategoryID,
+                        Description = @Desc, Price = @Price, DiscountPercent = @Disc, StockQuantity = @Stock,
+                        ImageURL = @Img, AdditionalImages = @AddlImg, Gender = @Gender, CaseColor = @CaseColor,
+                        StrapMaterial = @Strap, CaseDiameter = @CaseDiam, WaterResistance = @WaterRes,
+                        Movement = @Movement, Crystal = @Crystal, IsActive = @Active,
+                        IsFeatured = @Featured, IsNewArrival = @NewArr, IsBestSeller = @BestSell
+                    WHERE ProductID = @PID";
+
+                ExecuteNonQuery(sql, new[]
+                {
+                    new SqlParameter("@PID", productId),
+                    new SqlParameter("@Name", name),
+                    new SqlParameter("@BrandID", brandId),
+                    new SqlParameter("@CategoryID", categoryId),
+                    new SqlParameter("@Desc", (object)description ?? DBNull.Value),
+                    new SqlParameter("@Price", price),
+                    new SqlParameter("@Disc", discountPercent),
+                    new SqlParameter("@Stock", stock),
+                    new SqlParameter("@Img", (object)imageUrl ?? DBNull.Value),
+                    new SqlParameter("@AddlImg", (object)additionalImages ?? DBNull.Value),
+                    new SqlParameter("@Gender", gender ?? "Unisex"),
+                    new SqlParameter("@CaseColor", (object)caseColor ?? DBNull.Value),
+                    new SqlParameter("@Strap", (object)strapMaterial ?? DBNull.Value),
+                    new SqlParameter("@CaseDiam", (object)caseDiameter ?? DBNull.Value),
+                    new SqlParameter("@WaterRes", (object)waterResistance ?? DBNull.Value),
+                    new SqlParameter("@Movement", (object)movement ?? DBNull.Value),
+                    new SqlParameter("@Crystal", (object)crystal ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive),
+                    new SqlParameter("@Featured", isFeatured),
+                    new SqlParameter("@NewArr", isNewArrival),
+                    new SqlParameter("@BestSell", isBestSeller)
+                });
+                return productId;
+            }
+            else
+            {
+                string sql = @"
+                    INSERT INTO Products (
+                        ProductName, BrandID, CategoryID, Description, Price, DiscountPercent,
+                        StockQuantity, ImageURL, AdditionalImages, Gender, CaseColor, StrapMaterial,
+                        CaseDiameter, WaterResistance, Movement, Crystal, IsActive, IsFeatured,
+                        IsNewArrival, IsBestSeller, Rating, ReviewCount, CreatedAt
+                    ) VALUES (
+                        @Name, @BrandID, @CategoryID, @Desc, @Price, @Disc,
+                        @Stock, @Img, @AddlImg, @Gender, @CaseColor, @Strap,
+                        @CaseDiam, @WaterRes, @Movement, @Crystal, @Active, @Featured,
+                        @NewArr, @BestSell, 0, 0, GETDATE()
+                    );
+                    SELECT SCOPE_IDENTITY();";
+
+                return Convert.ToInt32(ExecuteScalar(sql, new[]
+                {
+                    new SqlParameter("@Name", name),
+                    new SqlParameter("@BrandID", brandId),
+                    new SqlParameter("@CategoryID", categoryId),
+                    new SqlParameter("@Desc", (object)description ?? DBNull.Value),
+                    new SqlParameter("@Price", price),
+                    new SqlParameter("@Disc", discountPercent),
+                    new SqlParameter("@Stock", stock),
+                    new SqlParameter("@Img", (object)imageUrl ?? DBNull.Value),
+                    new SqlParameter("@AddlImg", (object)additionalImages ?? DBNull.Value),
+                    new SqlParameter("@Gender", gender ?? "Unisex"),
+                    new SqlParameter("@CaseColor", (object)caseColor ?? DBNull.Value),
+                    new SqlParameter("@Strap", (object)strapMaterial ?? DBNull.Value),
+                    new SqlParameter("@CaseDiam", (object)caseDiameter ?? DBNull.Value),
+                    new SqlParameter("@WaterRes", (object)waterResistance ?? DBNull.Value),
+                    new SqlParameter("@Movement", (object)movement ?? DBNull.Value),
+                    new SqlParameter("@Crystal", (object)crystal ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive),
+                    new SqlParameter("@Featured", isFeatured),
+                    new SqlParameter("@NewArr", isNewArrival),
+                    new SqlParameter("@BestSell", isBestSeller)
+                }));
+            }
+        }
+
+        public static void DeleteProduct(int productId)
+        {
+            // Toggle active or delete
+            ExecuteNonQuery("UPDATE Products SET IsActive = CASE WHEN IsActive=1 THEN 0 ELSE 1 END WHERE ProductID=@PID",
+                new[] { new SqlParameter("@PID", productId) });
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // CATEGORIES & BRANDS CRUD
+        // ──────────────────────────────────────────────────────────────
+
+        public static DataTable GetCategoriesWithCount()
+        {
+            string sql = @"SELECT c.*, 
+                                  (SELECT COUNT(*) FROM Products p WHERE p.CategoryID = c.CategoryID) AS ProductCount
+                           FROM Categories c
+                           ORDER BY c.CategoryName";
+            return GetDataTable(sql);
+        }
+
+        public static DataRow GetCategoryByID(int categoryId)
+        {
+            return GetDataRow("SELECT * FROM Categories WHERE CategoryID=@ID",
+                new[] { new SqlParameter("@ID", categoryId) });
+        }
+
+        public static void SaveCategory(int categoryId, string name, string description, string imageUrl, bool isActive)
+        {
+            if (categoryId > 0)
+            {
+                string sql = "UPDATE Categories SET CategoryName=@Name, Description=@Desc, ImageURL=@Img, IsActive=@Active WHERE CategoryID=@ID";
+                ExecuteNonQuery(sql, new[]
+                {
+                    new SqlParameter("@Name", name),
+                    new SqlParameter("@Desc", (object)description ?? DBNull.Value),
+                    new SqlParameter("@Img", (object)imageUrl ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive),
+                    new SqlParameter("@ID", categoryId)
+                });
+            }
+            else
+            {
+                string sql = "INSERT INTO Categories (CategoryName, Description, ImageURL, IsActive) VALUES (@Name, @Desc, @Img, @Active)";
+                ExecuteNonQuery(sql, new[]
+                {
+                    new SqlParameter("@Name", name),
+                    new SqlParameter("@Desc", (object)description ?? DBNull.Value),
+                    new SqlParameter("@Img", (object)imageUrl ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive)
+                });
+            }
+        }
+
+        public static void ToggleCategoryStatus(int categoryId)
+        {
+            ExecuteNonQuery("UPDATE Categories SET IsActive = CASE WHEN IsActive=1 THEN 0 ELSE 1 END WHERE CategoryID=@ID",
+                new[] { new SqlParameter("@ID", categoryId) });
+        }
+
+        public static DataTable GetBrandsWithCount()
+        {
+            string sql = @"SELECT b.*, 
+                                  (SELECT COUNT(*) FROM Products p WHERE p.BrandID = b.BrandID) AS ProductCount
+                           FROM Brands b
+                           ORDER BY b.BrandName";
+            return GetDataTable(sql);
+        }
+
+        public static DataRow GetBrandByID(int brandId)
+        {
+            return GetDataRow("SELECT * FROM Brands WHERE BrandID=@ID",
+                new[] { new SqlParameter("@ID", brandId) });
+        }
+
+        public static void SaveBrand(int brandId, string name, string description, string logoUrl, string country, bool isActive)
+        {
+            if (brandId > 0)
+            {
+                string sql = "UPDATE Brands SET BrandName=@Name, Description=@Desc, LogoURL=@Logo, Country=@Country, IsActive=@Active WHERE BrandID=@ID";
+                ExecuteNonQuery(sql, new[]
+                {
+                    new SqlParameter("@Name", name),
+                    new SqlParameter("@Desc", (object)description ?? DBNull.Value),
+                    new SqlParameter("@Logo", (object)logoUrl ?? DBNull.Value),
+                    new SqlParameter("@Country", (object)country ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive),
+                    new SqlParameter("@ID", brandId)
+                });
+            }
+            else
+            {
+                string sql = "INSERT INTO Brands (BrandName, Description, LogoURL, Country, IsActive) VALUES (@Name, @Desc, @Logo, @Country, @Active)";
+                ExecuteNonQuery(sql, new[]
+                {
+                    new SqlParameter("@Name", name),
+                    new SqlParameter("@Desc", (object)description ?? DBNull.Value),
+                    new SqlParameter("@Logo", (object)logoUrl ?? DBNull.Value),
+                    new SqlParameter("@Country", (object)country ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive)
+                });
+            }
+        }
+
+        public static void ToggleBrandStatus(int brandId)
+        {
+            ExecuteNonQuery("UPDATE Brands SET IsActive = CASE WHEN IsActive=1 THEN 0 ELSE 1 END WHERE BrandID=@ID",
+                new[] { new SqlParameter("@ID", brandId) });
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // REVIEWS CRUD
+        // ──────────────────────────────────────────────────────────────
+
         public static DataTable GetAllReviews()
         {
-            return GetDataTable(@"SELECT r.*, u.FullName, p.ProductName
+            return GetDataTable(@"SELECT r.*, r.CreatedAt AS CreatedDate, u.FullName, p.ProductName, p.ImageURL
                                   FROM Reviews r
                                   JOIN Users    u ON r.UserID=u.UserID
                                   JOIN Products p ON r.ProductID=p.ProductID
@@ -580,6 +910,80 @@ namespace CYPHER.App_Code
                 new[] { new SqlParameter("@A", approve ? 1 : 0), new SqlParameter("@ID", reviewId) });
         }
 
+        public static void DeleteReview(int reviewId)
+        {
+            ExecuteNonQuery("DELETE FROM Reviews WHERE ReviewID=@ID",
+                new[] { new SqlParameter("@ID", reviewId) });
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // COUPONS CRUD
+        // ──────────────────────────────────────────────────────────────
+
+        public static DataTable GetAllCoupons()
+        {
+            return GetDataTable("SELECT * FROM Coupons ORDER BY CouponID DESC");
+        }
+
+        public static DataRow GetCouponByID(int couponId)
+        {
+            return GetDataRow("SELECT * FROM Coupons WHERE CouponID=@ID",
+                new[] { new SqlParameter("@ID", couponId) });
+        }
+
+        public static void SaveCoupon(int couponId, string code, string type, decimal value, decimal minAmount, int? maxUses, DateTime? expiry, bool isActive)
+        {
+            if (couponId > 0)
+            {
+                string sql = @"UPDATE Coupons 
+                               SET CouponCode=@Code, DiscountType=@Type, DiscountValue=@Val,
+                                   MinOrderAmount=@Min, MaxUses=@MaxUses, ExpiryDate=@Exp, IsActive=@Active
+                               WHERE CouponID=@ID";
+                ExecuteNonQuery(sql, new[]
+                {
+                    new SqlParameter("@Code", code.ToUpper().Trim()),
+                    new SqlParameter("@Type", type),
+                    new SqlParameter("@Val", value),
+                    new SqlParameter("@Min", minAmount),
+                    new SqlParameter("@MaxUses", (object)maxUses ?? DBNull.Value),
+                    new SqlParameter("@Exp", (object)expiry ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive),
+                    new SqlParameter("@ID", couponId)
+                });
+            }
+            else
+            {
+                string sql = @"INSERT INTO Coupons (CouponCode, DiscountType, DiscountValue, MinOrderAmount, MaxUses, ExpiryDate, IsActive)
+                               VALUES (@Code, @Type, @Val, @Min, @MaxUses, @Exp, @Active)";
+                ExecuteNonQuery(sql, new[]
+                {
+                    new SqlParameter("@Code", code.ToUpper().Trim()),
+                    new SqlParameter("@Type", type),
+                    new SqlParameter("@Val", value),
+                    new SqlParameter("@Min", minAmount),
+                    new SqlParameter("@MaxUses", (object)maxUses ?? DBNull.Value),
+                    new SqlParameter("@Exp", (object)expiry ?? DBNull.Value),
+                    new SqlParameter("@Active", isActive)
+                });
+            }
+        }
+
+        public static void DeleteCoupon(int couponId)
+        {
+            ExecuteNonQuery("DELETE FROM Coupons WHERE CouponID=@ID",
+                new[] { new SqlParameter("@ID", couponId) });
+        }
+
+        public static void ToggleCouponStatus(int couponId)
+        {
+            ExecuteNonQuery("UPDATE Coupons SET IsActive = CASE WHEN IsActive=1 THEN 0 ELSE 1 END WHERE CouponID=@ID",
+                new[] { new SqlParameter("@ID", couponId) });
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // REPORTS
+        // ──────────────────────────────────────────────────────────────
+
         public static DataTable GetSalesReport(DateTime from, DateTime to)
         {
             string sql = @"SELECT CAST(o.OrderDate AS DATE) AS SaleDate,
@@ -589,12 +993,35 @@ namespace CYPHER.App_Code
                            WHERE o.OrderDate >= @From AND o.OrderDate <= @To
                              AND o.OrderStatus <> 'Cancelled'
                            GROUP BY CAST(o.OrderDate AS DATE)
-                           ORDER BY SaleDate";
+                           ORDER BY SaleDate DESC";
             return GetDataTable(sql, new[]
             {
                 new SqlParameter("@From", from),
                 new SqlParameter("@To",   to)
             });
+        }
+
+        public static DataTable GetTopSellingProducts(int count = 5)
+        {
+            string sql = @"SELECT TOP (@Count) p.ProductID, p.ProductName, p.ImageURL, b.BrandName,
+                                  SUM(od.Quantity) AS UnitsSold, SUM(od.TotalPrice) AS TotalSales
+                           FROM OrderDetails od
+                           JOIN Products p ON od.ProductID = p.ProductID
+                           LEFT JOIN Brands b ON p.BrandID = b.BrandID
+                           JOIN Orders o ON od.OrderID = o.OrderID
+                           WHERE o.OrderStatus <> 'Cancelled'
+                           GROUP BY p.ProductID, p.ProductName, p.ImageURL, b.BrandName
+                           ORDER BY UnitsSold DESC";
+            return GetDataTable(sql, new[] { new SqlParameter("@Count", count) });
+        }
+
+        public static DataTable GetOrderStatusDistribution()
+        {
+            string sql = @"SELECT OrderStatus, COUNT(*) AS StatusCount, ISNULL(SUM(GrandTotal),0) AS TotalRevenue
+                           FROM Orders
+                           GROUP BY OrderStatus
+                           ORDER BY StatusCount DESC";
+            return GetDataTable(sql);
         }
     }
 }

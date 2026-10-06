@@ -166,10 +166,10 @@
                     <div class="d-flex justify-content-between">
                       <strong style="color:#FFF;"><%# Eval("FullName") %></strong>
                       <span class="stars" style="font-size:0.75rem;">
-                        <%# GetStarsHtml(Convert.ToInt32(Eval("Rating"))) %>
+                        <%# GetStarsHtml(Eval("Rating")) %>
                       </span>
                     </div>
-                    <small class="text-muted d-block mb-2"><%# Convert.ToDateTime(Eval("CreatedDate")).ToString("MMMM dd, yyyy") %></small>
+                    <small class="text-muted d-block mb-2"><%# GetReviewDate(Container.DataItem) %></small>
                     <p class="text-light mb-0" style="font-size:0.88rem; line-height:1.5;"><%# Eval("ReviewText") %></p>
                   </div>
                 </ItemTemplate>
